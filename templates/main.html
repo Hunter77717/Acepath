@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcePath</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <style>
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+
+        .slogan {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #333;
+            font-weight: bold;
+            font-style: Quigley Wiggly;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 200px;
+            justify-items: center;
+            margin-top: 40px;
+        }
+
+        .button-item {
+            text-align: center;
+        }
+
+        .button-item img {
+            max-width: 300px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .button-item button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Website Logo" class="logo">
+            <h1>AcePath</h1>
+        </div>
+        <p class="header-subtitle"></p>
+    </header>
+
+    <div class="slogan">
+        Unlock Your Potential: Ace Your Interviews with Confidence!
+    </div>
+
+    <div class="button-grid">
+        <div class="button-item">
+            <a href="/mock">
+                <img src="{{ url_for('static', filename='images/image1.PNG') }}" alt="mock interview">
+                <button>Mock Interview</button>
+            </a>
+        </div>
+        <div class="button-item">
+            <a href="/editor">
+                <img src="{{ url_for('static', filename='images/image4.jpg') }}" alt="Coding">
+                <button>Coding</button>
+            </a>
+        </div>
+        <div class="button-item">
+            <a href="/aptitude">
+                <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Aptitude">
+                <button>Aptitude</button><!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>AcePath</title>
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+                    <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                            font-family: 'Arial', sans-serif;
+                        }
+                
+                        body {
+                            background-color: #f5f7fa;
+                            min-height: 100vh;
+                            display: flex;
+                            flex-direction: column;
+                        }
+                
+                        header {
+                            background: linear-gradient(to right, #1a1a1a, #333333);
+                            color: white;
+                            padding: 1rem;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                        }
+                
+                        .header-left {
+                            display: flex;
+                            align-items: center;
+                            gap: 15px;
+                        }
+                
+                        .logo {
+                            height: 50px;
+                            width: 50px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                            border: 2px solid white;
+                        }
+                
+                        .profile-section {
+                            display: flex;
+                            align-items: center;
+                            gap: 15px;
+                        }
+                
+                        .profile-img {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: 50%;
+                            border: 2px solid white;
+                        }
+                
+                        .profile-name {
+                            color: white;
+                        }
+                
+                        .slogan {
+                            background: linear-gradient(45deg, #1a1a1a, #333333);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            text-align: center;
+                            margin-top: 20px;
+                        }
+                
+                        .button-grid {
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 40px;
+                            max-width: 1200px;
+                            margin: 0 auto;
+                            padding: 20px;
+                        }
+                
+                        .button-item {
+                            background: white;
+                            border-radius: 15px;
+                            padding: 20px;
+                            transition: transform 0.3s, box-shadow 0.3s;
+                            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                        }
+                
+                        .button-item:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+                        }
+                
+                        .button-item img {
+                            width: 100%;
+                            max-width: 300px;
+                            height: 200px;
+                            object-fit: cover;
+                            border-radius: 10px;
+                            margin: 0 auto;
+                            display: block;
+                        }
+                
+                        .button-item button {
+                            width: 100%;
+                            padding: 12px 24px;
+                            margin-top: 15px;
+                            border: none;
+                            border-radius: 25px;
+                            color: white;
+                            font-size: 1.1em;
+                            cursor: pointer;
+                            transition: opacity 0.3s;
+                            background: linear-gradient(to right, #1a1a1a, #333333);
+                        }
+                
+                        .button-item button:hover {
+                            opacity: 0.9;
+                        }
+                
+                        .feature-section {
+                            background: white;
+                            padding: 40px 20px;
+                            margin: 40px 0;
+                        }
+                
+                        .feature-grid {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 30px;
+                            max-width: 1200px;
+                            margin: 0 auto;
+                        }
+                
+                        .feature-item {
+                            text-align: center;
+                            padding: 20px;
+                        }
+                
+                        .feature-item i {
+                            font-size: 2.5em;
+                            color: #1a1a1a;
+                            margin-bottom: 15px;
+                        }
+                
+                        footer {
+                            background: #1a1a1a;
+                            color: white;
+                            padding: 40px 20px;
+                            margin-top: auto;
+                        }
+                
+                        .footer-content {
+                            max-width: 1200px;
+                            margin: 0 auto;
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 30px;
+                        }
+                
+                        .footer-section h3 {
+                            margin-bottom: 20px;
+                            color: #333333;
+                        }
+                
+                        .footer-section ul {
+                            list-style: none;
+                        }
+                
+                        .footer-section ul li {
+                            margin-bottom: 10px;
+                        }
+                
+                        .footer-section ul li a {
+                            color: white;
+                            text-decoration: none;
+                            transition: color 0.3s;
+                        }
+                
+                        .footer-section ul li a:hover {
+                            color: #3b4850;
+                        }
+                
+                        .social-icons {
+                            display: flex;
+                            gap: 15px;
+                            margin-top: 15px;
+                        }
+                
+                        .social-icons a {
+                            color: white;
+                            font-size: 1.5em;
+                            transition: color 0.3s;
+                        }
+                
+                        .social-icons a:hover {
+                            color: #333333;
+                        }
+                        .profile-section {
+                            display: flex;
+                            align-items: center;
+                            gap: 15px;
+                            cursor: pointer;
+                            text-decoration: none;
+                            color: white;
+                            transition: opacity 0.3s;
+                        }
+                
+                        .profile-section:hover {
+                            opacity: 0.9;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <header>
+                        <div class="header-left">
+                            <a href="/">
+                            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Website Logo" class="logo">
+                            </a>
+                            <h1>AcePath</h1>
+                        </div>
+                        <div class="profile-section">
+                            <span class="profile-name"></span>
+                            <a href="/profile">
+                            <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="Profile" class="profile-img">
+                            </a>
+                        </div>
+                    </header>
+                
+                    <div class="slogan">
+                        Unlock Your Potential: Ace Your Interviews with Confidence!
+                    </div>
+                
+                    <div class="button-grid">
+                        <div class="button-item">
+                            <a href="/mock">
+                                <img src="{{ url_for('static', filename='images/image1.PNG') }}" alt="mock interview">
+                                <button>Mock Interview</button>
+                            </a>
+                        </div>
+                        <div class="button-item">
+                            <a href="/editor">
+                                <img src="{{ url_for('static', filename='images/image4.jpg') }}" alt="Coding">
+                                <button>Coding</button>
+                            </a>
+                        </div>
+                        <div class="button-item">
+                            <a href="/aptitude">
+                                <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Aptitude">
+                                <button>Aptitude</button>
+                            </a>
+                        </div>
+                        <div class="button-item">
+                            <a href="/resume">
+                                <img src="{{ url_for('static', filename='images/image2.PNG') }}" alt="Resume Checker">
+                                <button>ATS Resume Checker</button>
+                            </a>
+                        </div>
+                    </div>
+                
+                    <section class="feature-section">
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-rocket"></i>
+                                <h3>Boost Your Career</h3>
+                                <p>Get ahead with our comprehensive interview preparation tools</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-code"></i>
+                                <h3>Practice Coding</h3>
+                                <p>Enhance your programming skills with real interview questions</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Track Progress</h3>
+                                <p>Monitor your improvement with detailed analytics</p>
+                            </div>
+                        </div>
+                    </section>
+                
+                    <footer>
+                        <div class="footer-content">
+                            <div class="footer-section">
+                                <h3>About Us</h3>
+                                <ul>
+                                    <li><a href="#">Our Story</a></li>
+                                    <li><a href="#">Team</a></li>
+                                    <li><a href="#">Careers</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-section">
+                                <h3>Resources</h3>
+                                <ul>
+                                    <li><a href="#">Blog</a></li>
+                                    <li><a href="#">Guides</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-section">
+                                <h3>Contact</h3>
+                                <ul>
+                                    <li><a href="#">Support</a></li>
+                                    <li><a href="#">Partnerships</a></li>
+                                    <li><a href="#">Feedback</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer-section">
+                                <h3>Connect</h3>
+                                <p>Follow us on social media</p>
+                                <div class="social-icons">
+                                    <a href="#"><i class="fab fa-facebook"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                                    <a href="#"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                    <script src="script.js"></script>
+                </body>
+                </html>
+            </a>
+        </div>
+        <div class="button-item">
+            <a href="/resume">
+                <img src="{{ url_for('static', filename='images/image2.PNG') }}" alt="Resume Checker">
+                <button>ATS Resume Checker</button>
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

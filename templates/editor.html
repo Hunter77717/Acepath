@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acepath</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Header Styles */
+        body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+}
+
+header {
+    width: 100vw;
+    background: linear-gradient(to right, #1a1a1a, #333333);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box; /* Ensures padding doesn't increase header width */
+    height: 6vw
+}
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .profile-name {
+            color: white;
+        }
+
+        /* Editor Container */
+        .editor-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            padding: 20px;
+            gap: 20px;
+        }
+
+        #editor {
+            flex: 1;
+            height: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .output-container {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #output {
+            flex: 1;
+            background: #1e1e1e;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+
+        button {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        #input-box {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+
+        /* Sidebar Styles */
+        #sidebar {
+            position: fixed;
+            right: -350px;
+            top: 70px;
+            width: 300px;
+            height: calc(100vh - 70px);
+            background: #f9f9f9;
+            padding: 20px;
+            transition: right 0.3s;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        #sidebar.active {
+            right: 0;
+        }
+
+        #sidebar-toggle {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            background: #000;
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px 0 0 5px;
+            transition: background-color 0.3s;
+        }
+
+        #sidebar-toggle:hover {
+            background-color: #333;
+        }
+
+        #prompt-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        #ai-response {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            height: calc(100% - 150px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Website Logo" class="logo">
+            </a>
+            <h1>AcePath</h1>
+        </div>
+        <div class="profile-section">
+            <span class="profile-name"></span>
+            <a href="/profile">
+                <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="Profile" class="profile-img">
+            </a>
+        </div>
+    </header>
+
+    <!-- Code Editor Container -->
+    <div class="editor-container">
+        <div id="editor"></div>
+        <div class="output-container">
+            <button id="run-btn">Run</button>
+            <button id="reset-btn">Reset</button>
+            <div id="output" placeholder="Output will be shown here..."></div>
+            <input id="input-box" type="text" placeholder="Enter input here..." />
+        </div>
+    </div>
+
+    <!-- Collapsible Sidebar for AI Interaction -->
+    <div id="sidebar">
+        <h2>AI Interaction</h2>
+        <input type="text" id="prompt-input" placeholder="Ask AI...">
+        <button id="send-btn">Send</button>
+        <button id="reset-chat-btn">Reset Chat</button>
+        <div id="ai-response">AI Responses will appear here...</div>
+    </div>
+
+    <!-- Sidebar Toggle Button -->
+    <div id="sidebar-toggle">→</div>
+
+    <!-- Monaco Editor Script -->
+    <script src="https://unpkg.com/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        // Initialize the Monaco editor
+        require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            window.editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '',
+                language: 'python',
+                theme: 'vs-dark'
+            });
+        });
+
+        // Run code button functionality
+        document.getElementById('run-btn').addEventListener('click', function() {
+            const code = window.editor.getValue();
+            const outputDiv = document.getElementById('output');
+            const inputBox = document.getElementById('input-box');
+
+            outputDiv.textContent = '';  // Clear previous output
+
+            if (code.includes('input(')) {
+                inputBox.style.display = 'block';
+                inputBox.focus();
+                inputBox.onkeypress = function(event) {
+                    if (event.key === 'Enter') {
+                        const userInput = inputBox.value;
+                        inputBox.style.display = 'none';
+                        inputBox.value = '';
+                        runCodeWithInput(code, userInput);
+                    }
+                };
+            } else {
+                runCodeWithInput(code);
+            }
+        });
+
+        // Run AI interaction functionality
+        document.getElementById('send-btn').addEventListener('click', function() {
+            const prompt = document.getElementById('prompt-input').value;
+            if (prompt.trim()) {
+                askAI(prompt);
+            }
+        });
+
+        // Reset chat functionality
+        document.getElementById('reset-chat-btn').addEventListener('click', function() {
+            document.getElementById('ai-response').textContent = 'AI Responses will appear here...';
+            document.getElementById('prompt-input').value = '';
+        });
+
+        // Toggle Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('sidebar-toggle');
+
+        toggleBtn.addEventListener('click', function() {
+            if (sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                toggleBtn.innerHTML = '→';
+            } else {
+                sidebar.classList.add('active');
+                toggleBtn.innerHTML = '←';
+            }
+        });
+
+        // Run code function
+        function runCodeWithInput(code, userInput = '') {
+            fetch('/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code, input: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = data.output;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Ask AI function
+        function askAI(prompt) {
+            fetch('/ask-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('ai-response').textContent = "AI Response: " + data.response;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Reset functionality
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            window.editor.setValue('');
+            document.getElementById('output').textContent = '';
+            document.getElementById('input-box').style.display = 'none';
+            document.getElementById('input-box').value = '';
+        });
+    </script>
+</body>
+</html>

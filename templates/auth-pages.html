@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcePath - Authentication</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-box h2 {
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #1a1a1a;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #333333;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-links a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .auth-links a:hover {
+            color: #333333;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            padding: 0 15px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            padding: 12px 25px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-btn:hover {
+            border-color: #1a1a1a;
+            background: #f5f5f5;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Signup specific styles */
+        .terms {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .terms a {
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Website Logo" class="logo">
+            <h1>AcePath</h1>
+        </div>
+    </header>
+
+    <!-- Login Form -->
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Welcome Back</h2>
+            <form action="/login" method="POST" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="error-message">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="error-message">Password must be at least 8 characters</div>
+                </div>
+
+                <button type="submit" class="submit-btn">Log In</button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn">
+                    <i class="fab fa-google"></i>
+                    Google
+                </button>
+                <button class="social-btn">
+                    <i class="fab fa-github"></i>
+                    GitHub
+                </button>
+            </div>
+
+            <div class="auth-links">
+                <a href="/forgot-password">Forgot Password?</a>
+                <br>
+                <a href="/signup">Don't have an account? Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="auth-container" style="display: none;">
+        <div class="auth-box">
+            <h2>Create Account</h2>
+            <form action="/signup" method="POST" id="signupForm">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="fullname" name="fullname" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signup-email" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signup-password" name="password" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirm-password" name="confirm-password" required>
+                    </div>
+                </div>
+
+                <div class="terms">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Account</button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn">
+                    <i class="fab fa-google"></i>
+                    Google
+                </button>
+                <button class="social-btn">
+                    <i class="fab fa-github"></i>
+                    GitHub
+                </button>
+            </div>
+
+            <div class="auth-links">
+                <a href="/login">Already have an account? Log in</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

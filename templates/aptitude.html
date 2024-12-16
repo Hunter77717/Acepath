@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>AcePath - Placement Training Platform</title>
+    <style>
+        /* Header Styles */
+        body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+}
+
+header {
+    width: 100vw;
+    background: linear-gradient(to right, #1a1a1a, #333333);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box; /* Ensures padding doesn't increase header width */
+    height: 6vw
+}
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+.profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .profile-name {
+            color: white;
+        }
+        
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-size: 2rem;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #ddd;
+            margin: 1rem 0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        /* Enhanced Question Styles */
+        .question {
+            background-color: #f9f9f9;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question:hover {
+            transform: translateY(-2px);
+            transition: transform 0.3s ease;
+        }
+
+        /* Enhanced Button Style */
+        button {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Feedback Container Styles */
+        #feedback-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        #feedback p {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-left: 3px solid #000;
+        }
+
+        #score {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #000;
+            color: #fff;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+    <script>
+        // Form submission function
+        async function submitForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            const scoreContainer = document.getElementById('score');
+            scoreContainer.innerText = `Your Score: ${result.score}`;
+
+            const feedbackContainer = document.getElementById('feedback');
+            feedbackContainer.innerHTML = '';
+
+            result.feedback.forEach(line => {
+                const feedbackItem = document.createElement('p');
+                feedbackItem.innerText = line;
+                feedbackContainer.appendChild(feedbackItem);
+            });
+        }
+
+        // Progress tracking
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('.question').length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        // Initialize when document loads
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', updateProgress);
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Simplified Header -->
+    <header>
+        <div class="header-left">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Website Logo" class="logo">
+            </a>
+            <h1>AcePath</h1>
+        </div>
+        <div class="profile-section">
+            <span class="profile-name"></span>
+            <a href="/profile">
+                <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="Profile" class="profile-img">
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Placement Training Assessment</h2>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+
+        <!-- Form with dynamic submission -->
+        <form method="POST" onsubmit="submitForm(event)" action="/">
+            <div class="questions">
+                {% for question in questions %}
+                    <div class="question">
+                        <h3>{{ question['difficulty'] }} - {{ question['type'] }}</h3>
+                        <p>{{ question['question'] }}</p>
+                        <ul>
+                            {% for option in question['options'] %}
+                                <li>
+                                    <input type="radio" name="{{ question['_id'] }}" value="{{ option }}"> {{ option }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit">Submit Assessment</button>
+        </form>
+
+        <!-- Dynamic feedback and score -->
+        <div id="feedback-container">
+            <h2>Your Feedback:</h2>
+            <div id="feedback"></div>
+            <div id="score"></div>
+        </div>
+    </div>
+</body>
+</html>

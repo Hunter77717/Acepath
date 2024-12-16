@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcePath - Mock Interview</title>
+    <style>
+        body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+}
+
+        /* Header Styles */
+        header {
+    width: 100vw;
+    background: linear-gradient(to right, #1a1a1a, #333333);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box; /* Ensures padding doesn't increase header width */
+    height: 6vw
+}
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .profile-name {
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: white;
+            font-size: 24px;
+        }
+
+        .profile-section img,
+        .header-left img {
+            border: 2px solid white;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Interview Container Styles */
+        .interview-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .interview-box {
+            flex: 1;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            min-height: 400px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* Audio Spectrum Canvas Styles */
+        .spectrum-canvas {
+            width: 100%;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-txt{
+            text-align: center;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            border-radius: 15px;
+            font-size: 12px;
+            color: white;
+            margin-left: auto;
+        }
+
+        /* Controls */
+        .controls {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .control-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .control-button:hover {
+            background-color: #45a049;
+        }
+
+        /* AI Output Box */
+        .ai-output-box {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            min-height: 100px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AcePath Logo" class="logo">
+            <h1 style="color: white;">AcePath</h1>
+        </div>
+        <div class="profile-section">
+            <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="Profile" class="profile-img">
+        </div>
+    </header>
+
+    <div class="interview-container">
+        <!-- Left Side Box: User -->
+        <div class="interview-box">
+            <div class="user-info">
+                <div class="user-txt">
+                    <span>You</span>
+                </div>
+            </div>
+            <!-- Video Element for Webcam -->
+            <video id="webcam" autoplay playsinline width="100%" height="auto" style="border-radius: 10px; margin-top: 1rem;"></video>
+
+            <div class="controls">
+                <button class="control-button" onclick="startRecording()">Answer question</button>
+                <button class="control-button" onclick="toggleWebcam()">Toggle Webcam</button>
+            </div>
+        </div>
+
+        <!-- Right Side Box: AI Interviewer -->
+        <div class="interview-box">
+            <div class="user-info">
+                <div class="user-txt">
+                    <span>AI Interviewer</span>
+                </div>
+            </div>
+
+            <!-- AI's Photo in White Space -->
+            <img src="{{ url_for('static', filename='images/ai1.jpg') }}" alt="AI Interviewer" style="width: 450px; height: 400px; margin: 20px auto; display: block;">
+
+            <div class="controls">
+                <button class="control-button" onclick="fetchQuestion()">Get Question</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Output Box -->
+    <div class="interview-box ai-output-box">
+        <h3>AI Response</h3>
+        <div id="aiOutput">
+            <!-- AI output will appear here -->
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html> 

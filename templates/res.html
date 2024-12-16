@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Feedback</title>
+    
+    <style>
+        /* Header Styles */
+        body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fa;
+}
+
+header {
+    width: 100vw;
+    background: linear-gradient(to right, #1a1a1a, #333333);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box; /* Ensures padding doesn't increase header width */
+    height: 6vw
+}
+
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+.profile-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .profile-name {
+            color: white;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-size: 2rem;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* Main Content Styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        form {
+            background-color: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="file"] {
+            margin-bottom: 1.5rem;
+            padding: 0.5rem;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        input[type="submit"] {
+            background-color: #000;
+            color: #fff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #333;
+        }
+
+        /* Feedback Styles */
+        .feedback {
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .feedback h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .feedback ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .feedback li {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-left: 3px solid #000;
+            background-color: #fff;
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Website Logo" class="logo">
+            </a>
+            <h1>AcePath</h1>
+        </div>
+        <div class="profile-section">
+            <span class="profile-name"></span>
+            <a href="/profile">
+                <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="Profile" class="profile-img">
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>ATS Resume Feedback Application</h2>
+        <form action="/resume" method="post" enctype="multipart/form-data">
+            <label for="resume">Upload Resume (PDF only):</label>
+            <input type="file" name="resume" accept="application/pdf" required>
+            
+            <label for="job_description">Enter Job Description:</label>
+            <textarea name="job_description" rows="8" cols="50" required></textarea>
+            
+            <input type="submit" value="Get Feedback">
+        </form>
+
+        {% if feedback_lines %}
+            <div class="feedback">
+                <h3>Feedback:</h3>
+                <ul>
+                    {% for line in feedback_lines %}
+                        <li>{{ line }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
